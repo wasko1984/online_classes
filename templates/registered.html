@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Registration received — WASKO VIRTUAL ACADEMY{% endblock %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand"><span class="mark">WV</span> WASKO VIRTUAL ACADEMY</a>
+    <div class="nav-links"><a href="{{ url_for('index') }}">Home</a></div>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="container">
+    <div class="form-shell" style="text-align:center;">
+      <div class="eyebrow">Step complete</div>
+      <h1>Registration received</h1>
+      <p class="sub">
+        Thanks, {{ student.full_name }}. Your registration for
+        <strong>{{ student.course }}</strong> has been sent to the academy for review.
+      </p>
+
+      <div class="reg-code">{{ student.reg_code }}</div>
+      <p style="font-size:0.88rem;">
+        Save this enrolment code — with your email, it's how you'll check your
+        status and download course materials once approved.
+      </p>
+
+      <a href="{{ url_for('status') }}" class="btn btn-primary" style="width:100%; margin-top:14px;">Check my status</a>
+      <a href="{{ url_for('index') }}" class="btn btn-outline" style="width:100%; margin-top:10px;">Back to home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

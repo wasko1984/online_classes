@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Register — WASKO VIRTUAL ACADEMY{% endblock %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand"><span class="mark">WV</span> WASKO VIRTUAL ACADEMY</a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('status') }}">Check status</a>
+    </div>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="container">
+    <div class="form-shell">
+      <div class="eyebrow">Registration</div>
+      <h1>Enrol in a course</h1>
+      <p class="sub">Fill in your details, upload your passport photograph, and scroll to choose one course.</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="flash flash-{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" enctype="multipart/form-data" novalidate>
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="field">
+          <label for="full_name">Full name</label>
+          <input type="text" id="full_name" name="full_name" value="{{ form.full_name or '' }}" placeholder="e.g. Amaka Chidinma Obi" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" value="{{ form.email or '' }}" placeholder="you@example.com" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" value="{{ form.phone or '' }}" placeholder="e.g. +234 800 000 0000" required>
+        </div>
+
+        <div class="field">
+          <label for="passport">Passport photograph / ID</label>
+          <input type="file" id="passport" name="passport" accept=".png,.jpg,.jpeg,.pdf" required>
+          <div class="hint">PNG, JPG or PDF, up to 15MB.</div>
+        </div>
+
+        <div class="field">
+          <label>Choose a course — scroll to see all tracks</label>
+          <div class="course-picker" id="coursePicker">
+            {% for c in courses %}
+            <label>
+              <input type="radio" name="course" value="{{ c }}" {% if form.course == c %}checked{% endif %} required>
+              {{ c }}
+            </label>
+            {% endfor %}
+          </div>
+          <div class="hint">Scroll within the box to view all seven tracks.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">Submit registration</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('#coursePicker input[type=radio]').forEach(function(r){
+  r.addEventListener('change', function(){
+    document.querySelectorAll('#coursePicker label').forEach(function(l){ l.classList.remove('checked'); });
+    if (r.checked) r.closest('label').classList.add('checked');
+  });
+});
+document.querySelectorAll('#coursePicker input[type=radio]:checked').forEach(function(r){
+  r.closest('label').classList.add('checked');
+});
+</script>
+{% endblock %}

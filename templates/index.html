@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand">
+      <span class="mark">WV</span> WASKO VIRTUAL ACADEMY
+    </a>
+    <div class="nav-links">
+      <a href="#courses">Courses</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="{{ url_for('status') }}">Check status</a>
+      <a href="{{ url_for('admin_login') }}">Admin</a>
+      <a href="{{ url_for('register') }}" class="btn btn-gold btn-small">Enrol now</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div>
+      <div class="eyebrow">Enrolment open — Cohort 04</div>
+      <h1>Learn the skills the <em>digital economy</em> is hiring for.</h1>
+      <p class="lead">
+        WASKO VIRTUAL ACADEMY trains students in AI Automation, Cybersecurity,
+        Digital Forensics, Web Design, Software Development and more —
+        entirely online, taught by practitioners, with materials released
+        as soon as your registration is confirmed.
+      </p>
+      <div class="hero-actions">
+        <a href="{{ url_for('register') }}" class="btn btn-gold">Register for a course</a>
+        <a href="{{ url_for('status') }}" class="btn btn-outline-light">Check my registration</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>7</strong><span>Course tracks</span></div>
+        <div><strong>100%</strong><span>Online delivery</span></div>
+        <div><strong>24hr</strong><span>Admin review time</span></div>
+      </div>
+    </div>
+
+    <div class="ledger">
+      <div class="ledger-head">
+        <span>The Enrolment Ledger</span>
+        <span>Cohort 04</span>
+      </div>
+      <div class="ledger-rows">
+        {% for c in courses %}
+        <a class="ledger-row" href="{{ url_for('register') }}#course-{{ loop.index }}">
+          <span class="num">{{ '%02d'|format(loop.index) }}</span>
+          <span>
+            <span class="name">{{ c }}</span><br>
+            <span class="tag">Track {{ '%02d'|format(loop.index) }} · Open</span>
+          </span>
+          <span class="arrow">→</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="container about-grid">
+    <div>
+      <div class="eyebrow">Why WASKO</div>
+      <h2>Built for people starting or restarting a tech career.</h2>
+      <p>
+        Every course is delivered virtually, with structured materials
+        released by your course administrator once your registration is
+        confirmed. No prior technical background is required for most
+        tracks — just a working device and an internet connection.
+      </p>
+    </div>
+    <ul class="about-list">
+      <li>Register once, get a permanent enrolment code to track your course.</li>
+      <li>Admin reviews every registration before materials are released.</li>
+      <li>Course materials — notes, slides, tools, recordings — uploaded directly by your instructor.</li>
+      <li>Seven tracks spanning security, development, forensics and marketing.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="courses" id="courses">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Course tracks</div>
+      <h2>Pick a track when you register.</h2>
+    </div>
+    <div class="course-grid">
+      {% set blurbs = {
+        "AI Automation": "Build practical automations and AI-driven workflows for real business tasks.",
+        "Computer Studies": "Core computing literacy — systems, software and productivity tools.",
+        "Cybersecurity": "Defensive fundamentals: networks, threats, and security operations.",
+        "Digital Forensics": "Investigate digital evidence and incident response methodology.",
+        "Digital Marketing": "Grow audiences and campaigns across search, social and content.",
+        "Web Design": "Design and build modern, responsive websites from scratch.",
+        "Software Development": "Programming fundamentals through to shipping full applications."
+      } %}
+      {% for c in courses %}
+      <div class="course-card" id="course-{{ loop.index }}">
+        <div class="num">Track {{ '%02d'|format(loop.index) }}</div>
+        <h3>{{ c }}</h3>
+        <p>{{ blurbs[c] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">How it works</div>
+      <h2>From registration to your first lesson.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Register</h3>
+        <p>Submit your name, email, phone number and passport photograph, and choose one course track.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Admin review</h3>
+        <p>The academy reviews your registration and approves your place on the course.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Materials released</h3>
+        <p>Once approved, your course materials are uploaded and available from your status page.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <div class="container">
+    <h2>Ready to start?</h2>
+    <p>Registration takes less than five minutes. You'll receive an enrolment code to check your status at any time.</p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary" style="margin-top:20px;">Register for a course</a>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <span>© {{ current_year }} WASKO VIRTUAL ACADEMY</span>
+    <span><a href="{{ url_for('status') }}">Check registration status</a> · <a href="{{ url_for('admin_login') }}">Admin login</a></span>
+  </div>
+</footer>
+{% endblock %}

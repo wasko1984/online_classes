@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Check status — WASKO VIRTUAL ACADEMY{% endblock %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand"><span class="mark">WV</span> WASKO VIRTUAL ACADEMY</a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('register') }}">Register</a>
+    </div>
+  </div>
+</nav>
+
+<div class="form-page">
+  <div class="container">
+    <div class="form-shell">
+      <div class="eyebrow">Registration status</div>
+      <h1>Check your status</h1>
+      <p class="sub">Enter the enrolment code and email you registered with.</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, msg in messages %}<div class="flash flash-{{ category }}">{{ msg }}</div>{% endfor %}{% endif %}
+      {% endwith %}
+
+      <form method="post">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="field">
+          <label for="reg_code">Enrolment code</label>
+          <input type="text" id="reg_code" name="reg_code" placeholder="WVXXXXXXXX" required>
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Check status</button>
+      </form>
+
+      {% if searched %}
+        {% if student %}
+          <div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);">
+            <h3>{{ student.full_name }}</h3>
+            <p style="font-size:0.9rem;">
+              Course: <strong>{{ student.course }}</strong><br>
+              Status:
+              {% if student.status == 'approved' %}
+                <span class="badge badge-approved">Approved</span>
+              {% else %}
+                <span class="badge badge-pending">Pending review</span>
+              {% endif %}
+            </p>
+
+            {% if student.status == 'approved' %}
+              <h3 style="margin-top:24px;">Course materials</h3>
+              {% if materials %}
+                <ul class="about-list">
+                  {% for m in materials %}
+                  <li style="width:100%; justify-content:space-between; display:flex;">
+                    <span>{{ m.title }}</span>
+                    <a href="{{ url_for('download_material', filename=m.filename) }}" class="btn btn-outline btn-small">Download</a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p style="font-size:0.88rem;">No materials uploaded for {{ student.course }} yet — check back soon.</p>
+              {% endif %}
+            {% else %}
+              <p style="font-size:0.88rem;">Your registration is still under review. Materials will appear here once you're approved.</p>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="flash flash-error" style="margin-top:24px;">No matching registration found. Double-check your code and email.</div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

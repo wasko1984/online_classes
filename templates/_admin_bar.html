@@ -1,0 +1,11 @@
+<div class="admin-bar">
+  <div class="container">
+    <a href="{{ url_for('admin_dashboard') }}" class="brand"><span class="mark">WV</span> Admin</a>
+    <nav>
+      <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if active=='dashboard' else '' }}">Registrations</a>
+      <a href="{{ url_for('admin_materials') }}" class="{{ 'active' if active=='materials' else '' }}">Course materials</a>
+      <a href="{{ url_for('index') }}">View site</a>
+      <a href="{{ url_for('admin_logout') }}">Log out</a>
+    </nav>
+  </div>
+</div>

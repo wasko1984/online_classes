@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Registrations — WASKO Admin{% endblock %}
+{% block body %}
+{% include "_admin_bar.html" %}
+
+<div class="admin-wrap">
+  <div class="container">
+    <div class="admin-head">
+      <div>
+        <div class="eyebrow">Admin</div>
+        <h1 style="font-size:1.9rem;">Student registrations</h1>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, msg in messages %}<div class="flash flash-{{ category }}">{{ msg }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="n">{{ total }}</div><div class="l">Total registrations</div></div>
+      <div class="stat-card"><div class="n">{{ pending }}</div><div class="l">Pending review</div></div>
+      <div class="stat-card"><div class="n">{{ total - pending }}</div><div class="l">Approved</div></div>
+      <div class="stat-card"><div class="n">{{ courses|length }}</div><div class="l">Course tracks</div></div>
+    </div>
+
+    <div class="filter-row">
+      <a href="{{ url_for('admin_dashboard') }}" class="filter-chip {{ 'active' if not course_filter else '' }}">All ({{ total }})</a>
+      {% for c in courses %}
+      <a href="{{ url_for('admin_dashboard', course=c) }}" class="filter-chip {{ 'active' if course_filter==c else '' }}">{{ c }} ({{ counts[c] }})</a>
+      {% endfor %}
+    </div>
+
+    {% if students %}
+    <table>
+      <thead>
+        <tr>
+          <th>Enrolment code</th>
+          <th>Student</th>
+          <th>Contact</th>
+          <th>Course</th>
+          <th>Passport</th>
+          <th>Status</th>
+          <th>Registered</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr>
+          <td><span style="font-family:var(--mono); font-size:0.82rem;">{{ s.reg_code }}</span></td>
+          <td>{{ s.full_name }}</td>
+          <td>{{ s.email }}<br><span style="color:var(--slate); font-size:0.8rem;">{{ s.phone }}</span></td>
+          <td>{{ s.course }}</td>
+          <td><a href="{{ url_for('admin_passport', filename=s.passport_filename) }}" target="_blank" class="btn btn-outline btn-small">View</a></td>
+          <td>
+            {% if s.status == 'approved' %}
+              <span class="badge badge-approved">Approved</span>
+            {% else %}
+              <span class="badge badge-pending">Pending</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--slate); font-size:0.8rem;">{{ s.created_at.strftime('%d %b %Y') }}</td>
+          <td class="actions">
+            {% if s.status != 'approved' %}
+            <form method="post" action="{{ url_for('approve_student', student_id=s.id) }}">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-gold btn-small">Approve</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{{ url_for('delete_student', student_id=s.id) }}" onsubmit="return confirm('Remove this registration?');">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-danger btn-small">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">No registrations {{ 'for ' + course_filter if course_filter else '' }} yet.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

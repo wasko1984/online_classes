@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Admin login — WASKO VIRTUAL ACADEMY{% endblock %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand"><span class="mark">WV</span> WASKO VIRTUAL ACADEMY</a>
+    <div class="nav-links"><a href="{{ url_for('index') }}">Home</a></div>
+  </div>
+</nav>
+
+<div class="login-shell">
+  <div class="mark">WV</div>
+  <div class="eyebrow">Staff access</div>
+  <h1 style="font-size:1.6rem;">Admin login</h1>
+  <p class="sub" style="margin-bottom:22px;">Manage registrations and upload course materials.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, msg in messages %}<div class="flash flash-{{ category }}">{{ msg }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <form method="post">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required autofocus>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary" style="width:100%;">Log in</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Course materials — WASKO Admin{% endblock %}
+{% block body %}
+{% include "_admin_bar.html" %}
+
+<div class="admin-wrap">
+  <div class="container">
+    <div class="admin-head">
+      <div>
+        <div class="eyebrow">Admin</div>
+        <h1 style="font-size:1.9rem;">Course materials</h1>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, msg in messages %}<div class="flash flash-{{ category }}">{{ msg }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+
+    <div class="material-form">
+      <h3>Upload new material</h3>
+      <form method="post" enctype="multipart/form-data">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="two-col">
+          <div class="field">
+            <label for="course">Course</label>
+            <select id="course" name="course" required>
+              <option value="" disabled selected>Select a course</option>
+              {% for c in courses %}
+              <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label for="title">Material title</label>
+            <input type="text" id="title" name="title" placeholder="e.g. Week 1 — Introduction slides" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="material">File</label>
+          <input type="file" id="material" name="material" required>
+          <div class="hint">PDF, Office documents, ZIP, images, audio or video, up to 15MB.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload material</button>
+      </form>
+    </div>
+
+    {% if materials %}
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Course</th><th>File</th><th>Uploaded</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for m in materials %}
+        <tr>
+          <td>{{ m.title }}</td>
+          <td>{{ m.course }}</td>
+          <td><a href="{{ url_for('download_material', filename=m.filename) }}" class="btn btn-outline btn-small">Download</a></td>
+          <td style="color:var(--slate); font-size:0.8rem;">{{ m.uploaded_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <form method="post" action="{{ url_for('delete_material', material_id=m.id) }}" onsubmit="return confirm('Remove this material?');">
+<input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-danger btn-small">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">No course materials uploaded yet.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

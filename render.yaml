@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: wasko-virtual-academy
+    runtime: python
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --workers 2 --timeout 120 app:app"
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wasko-virtual-academy-db
+          property: connectionString
+      - key: DATA_DIR
+        value: /var/data
+      - key: COOKIE_SECURE
+        value: "1"
+    disk:
+      name: wasko-data
+      mountPath: /var/data
+      sizeGB: 1
+
+databases:
+  - name: wasko-virtual-academy-db
+    plan: basic-256mb
+    region: frankfurt

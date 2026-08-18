@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Page not found — WASKO VIRTUAL ACADEMY{% endblock %}
+{% block body %}
+<nav class="site-nav">
+  <div class="container">
+    <a href="{{ url_for('index') }}" class="brand"><span class="mark">WV</span> WASKO VIRTUAL ACADEMY</a>
+  </div>
+</nav>
+<div class="form-page">
+  <div class="container" style="text-align:center;">
+    <div class="eyebrow">404</div>
+    <h1>Page not found</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Back to home</a>
+  </div>
+</div>
+{% endblock %}

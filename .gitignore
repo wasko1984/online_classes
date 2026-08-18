@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+instance/*.db
+uploads/passports/*
+uploads/materials/*
+!uploads/passports/.gitkeep
+!uploads/materials/.gitkeep
+.pytest_cache/
